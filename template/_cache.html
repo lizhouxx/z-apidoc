@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>setting</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link href="vendor/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="vendor/prettify.css" rel="stylesheet" media="screen">
+  <link href="img/favicon.ico" rel="icon" type="image/x-icon">
+  <script src="vendor/jquery.min.js"></script>
+  <script src="_cache.js"></script><!--add by lizhou-->
+  <style>
+  	.result
+  	{
+  		color:red;
+  	}
+  </style>
+</head>
+<body>
+    <form class="" role="form">
+        <div class="container">
+            <div class="row" style="padding: 20px 0">
+                <h3>设置参数缓存 &nbsp;&nbsp;&nbsp;&nbsp; <b id="result"></b></h3>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">总开关</span>
+                        <select class="form-control" id="enable">
+                            <option value='0'>禁用</option>
+                            <option value='1'>启用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="clear_all">清除所有</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        	<a id="call_cache_set" style="cursor:pointer">设置</a>&nbsp;&nbsp;<a id="call_cache_get" style="cursor:pointer">拷贝</a>
+                       </span>
+                       <input rows="10" class="form-control" type="text" id="call_cache" placeholder='所有缓存'/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">公用默认参数</span>
+                        <textarea rows="10" class="form-control" type="text" id="default"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">请求缓存参数</span>
+                        <textarea rows="20" class="form-control" type="text" id="history"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">定制按钮是否显示</span>
+                        <select class="form-control" id="myBox_flag">
+                            <option value='0'>否</option>
+                            <option value='1'>是</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">请求参数共用</span>
+                        <div class="checkbox" id="myBox_flag">
+                        	&nbsp;&nbsp;&nbsp;
+                          <label><input type="checkbox" value="a">无条件</label>
+                          <label><input type="checkbox" value="b">非空时</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           -->
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="check">检测格式</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div id="msg">
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control" type="text">
+                        <span class="input-group-addon">查询</span>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </form>
+</body>
+</html>
+<script>
+  function msg(txt)
+  {
+  	$('#result').html(txt)
+  	setTimeout("$('#result').html('')",1000);
+
+  }
+  
+  //初始
+	if(localStorage.apidoc_cache_switch)
+	{
+		$('#enable').val(localStorage.apidoc_cache_switch)
+	}
+	
+	$('#history').val(inputCacheStr())
+	$('#history').focus(function(){
+		$('#history').val(inputCacheStr())
+	})
+
+	if(localStorage.apidoc_default)
+	{
+		$('#default').val(localStorage.apidoc_default)
+	}
+	
+
+	if(localStorage.apidoc_myBox_flag)
+	{
+		$('#myBox_flag').val(localStorage.apidoc_myBox_flag)
+    /*
+		for(i=0;i<localStorage.apidoc_myBox_flag.length;i++){
+		    var a=localStorage.apidoc_myBox_flag.charAt(i);
+		    $('#myBox_flag input[type=checkbox][value='+a+']').attr('checked','checked')
+		}
+		*/
+	}
+
+
+  //事件：缓存到localStorage
+	$('#enable').change(function(){
+			    localStorage.apidoc_cache_switch=$(this).val();
+	})
+
+	$('#myBox_flag').change(function(){
+			    localStorage.apidoc_myBox_flag=$(this).val();
+	})
+/*
+	$('#myBox_flag input[type=checkbox]').change(function(){
+		var value='';
+		$('#myBox_flag input[type=checkbox]:checked').each(function(){
+         value+=$(this).val();
+    });
+            
+		localStorage.apidoc_myBox_flag=value;
+	})
+*/
+
+	$('#clear_all').click(function(){
+			    //localStorage.clear();
+			    call_cache_clear();
+			    location.reload();
+	})
+	$('#history,#default').change(function(){
+		$(this).trigger('keyup')
+	})
+	
+		
+	$('#history').keyup(function(){
+	 	inputCacheStr($(this).val())
+		$('#check').trigger('click')
+	})
+	
+	$('#default').keyup(function(){
+		localStorage.apidoc_default=$(this).val()
+		$('#check').trigger('click')
+	})
+	
+	//JSON格式校验
+	$('#check').click(function(){
+      $('#msg').css('color','red').html('')
+      $('#default').css('border-color','#ccc')
+
+		  var j1,j2;
+		  var b=true;
+		  try{
+	        if(inputCacheStr())
+	        {
+	    	      j1=JSON.parse(inputCacheStr())
+	        }
+      }
+      catch(e)
+      {
+          $('#default').css('border-color','red')
+          $('#msg').html('共用默认参数 格式错误！')
+          b=false;
+      }
+		  try{
+	        if(localStorage.apidoc_default)
+	        {
+	          	j2=JSON.parse(localStorage.apidoc_default)
+	        }
+      }
+      catch(e)
+      {
+          $('#default').css('border-color','red')
+          $('#msg').html('请求缓存参数 格式错误！')
+          b=false;
+      }
+      
+      if(b)
+      {
+          $('#default,#history').css('border-color','green')
+          setTimeout("$('#default,#history').css('border-color','#ccc')",1000);
+      }
+			   
+	})
+	
+	
+  $('#call_cache_set').click(function(){
+  	apidocCacheStr($('#call_cache').val())
+		location.reload();
+  });
+
+  $('#call_cache_get').click(function(){
+  	var qrcodeUrl = apidocCacheStr();
+    var oInput = document.createElement('input');
+    oInput.value = qrcodeUrl;
+    document.body.appendChild(oInput);
+    oInput.select(); // 选择对象
+    document.execCommand("Copy"); // 执行浏览器复制命令
+    oInput.className = 'oInput';
+    alert('复制成功');
+  });
+
+  function apidocCacheStr(val)
+  {
+  	if(val)
+  	{
+  		  var j=JSON.parse(val)
+  		  
+			  for(i in j)
+			  { 
+			    if(isJson(j[i]))
+			    {
+			    	localStorage[i]=JSON.stringify(j[i]);
+			    }
+			    else
+			    {
+			    	localStorage[i]=j[i];
+			    }
+			  }
+  	}
+  	else
+  	{
+  	   var j={}
+  	
+			  for(i in localStorage)
+			  {
+			     if(i.indexOf('apidoc_')==0)
+			     {
+			     	  if(isJson(localStorage[i]))
+			     	  {
+			     	    j[i]=JSON.parse(localStorage[i]);
+
+			     	  }
+			     	  else
+			     	  {
+			     	    j[i]=localStorage[i];
+			     	  }
+			     }
+			  }
+			  return JSON.stringify(j)
+  	}
+  }
+	function call_cache_clear()
+  {
+			    for(i in localStorage)
+			    {
+			    	if(i.indexOf('apidoc_')==0)
+			    	{
+			    		localStorage.removeItem(i)
+			    	}
+			    }
+  }
+</script>
