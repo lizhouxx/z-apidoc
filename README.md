@@ -1,4 +1,4 @@
-定制：
+定制：cache setting
     1.增加输入参数是json类型的  @api {json} ..  @api {json2} ..
     2.缓存
     3.关联

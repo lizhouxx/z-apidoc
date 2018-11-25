@@ -39,7 +39,7 @@ define([
   	  var p = 'article[data-group="' + group + '"][data-name="' + name + '"][data-version="' + version + '"]';
   	  cacheInput(p)
 
-/* ¸Ä°æ±¾ºÅÊ±¼æÈÝ£¬ÎªÁË¼æÈÝ£¬ÔÝ²»ÓÃ
+/* ï¿½Ä°æ±¾ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ý£ï¿½Îªï¿½Ë¼ï¿½ï¿½Ý£ï¿½ï¿½Ý²ï¿½ï¿½ï¿½
   	  var p = 'article[data-group="' + group + '"][data-name="' + name + '"]';
   	  cacheInput(p)
   	  p=p+'[data-version="' + version + '"]'
@@ -137,7 +137,20 @@ define([
         	ajaxRequest.data=param.JSON__STR
         }
       }
-      console.log("data:"+JSON.stringify(ajaxRequest.data))
+      else if(type.toUpperCase()=="RSA")
+      {
+    	  var default_=localStorage.apidoc_default?JSON.parse(localStorage.apidoc_default):{};
+          var encrypt = new JSEncrypt();
+          encrypt.setPublicKey(default_['RSA_PublicKey_1']);
+          var bizContent = encrypt.encrypt(JSON.stringify(ajaxRequest.data));
+          ajaxRequest.data={
+        		  bizContent: bizContent
+          }
+          ajaxRequest.type='POST';
+      }
+
+console.log("data:"+JSON.stringify(ajaxRequest.data))
+
       //add by lizhou ed 
       $.ajax(ajaxRequest);
 
@@ -146,6 +159,14 @@ define([
           var jsonResponse;
           try {
               jsonResponse = JSON.parse(jqXHR.responseText);
+              if(jsonResponse && jsonResponse.bizContent && jsonResponse.bizContent!='')
+              {
+            	  var default_=localStorage.apidoc_default?JSON.parse(localStorage.apidoc_default):{};
+                  var encrypt = new JSEncrypt();
+            	 ã€€ encrypt.setPrivateKey(default_['RSA_PrivateKey_2']);
+            	  var content=encrypt.decrypt(jsonResponse.bizContent);
+            	ã€€ jsonResponse.bizContent_decode=content
+              }
               jsonResponse = JSON.stringify(jsonResponse, null, 4);
           } catch (e) {
               jsonResponse = data;
