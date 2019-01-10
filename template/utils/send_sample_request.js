@@ -27,7 +27,8 @@ define([
       });
       var cache_switch=localStorage.apidoc_cache_switch && localStorage.apidoc_cache_switch==1;
       if(cache_switch)
-      {      	
+      {
+      	
           initInput()
           initDefine()
           initMyBox()
@@ -120,7 +121,8 @@ define([
       };
       //add by lizhou st
       if(type.toUpperCase().indexOf("JSON")>=0)
-      {      	
+      {
+      	
         $.extend(ajaxRequest, {
       	  type:"POST",
       	  datType:"JSON",
@@ -139,10 +141,25 @@ define([
       }
       else if(type.toUpperCase()=="RSA")
       {
-    	  var default_=localStorage.apidoc_default?JSON.parse(localStorage.apidoc_default):{};
-          var encrypt = new JSEncrypt();
+    	 var default_=localStorage.apidoc_default?JSON.parse(localStorage.apidoc_default):{};
+    	 /* var encrypt = new JSEncrypt();
           encrypt.setPublicKey(default_['RSA_PublicKey_1']);
-          var bizContent = encrypt.encrypt(JSON.stringify(ajaxRequest.data));
+          var bizContent = encrypt.encrypt(JSON.stringify(ajaxRequest.data));*/
+          
+          var p = {content:JSON.stringify(ajaxRequest.data), publicKey:default_['RSA_PublicKey_1']}
+            	              	  
+          s=$.ajax({url:"http://localhost:8850/encode",data:p,async:false}).responseText;
+            	  
+          var rs = JSON.parse(s);
+          if(rs.code!=0)
+          {
+            	alert(rs.msg);
+          }
+          else
+          {
+             bizContent = rs.data
+          }
+            	  
           ajaxRequest.data={
         		  bizContent: bizContent
           }
@@ -161,11 +178,28 @@ console.log("data:"+JSON.stringify(ajaxRequest.data))
               jsonResponse = JSON.parse(jqXHR.responseText);
               if(jsonResponse && jsonResponse.bizContent && jsonResponse.bizContent!='')
               {
+              	//RSA解密
             	  var default_=localStorage.apidoc_default?JSON.parse(localStorage.apidoc_default):{};
-                  var encrypt = new JSEncrypt();
+            	  
+            	  var p = {bizContent:jsonResponse.bizContent, privateKey:default_['RSA_PrivateKey_2']}
+            	              	  
+            	  s=$.ajax({url:"http://localhost:8850/decode",data:p,async:false}).responseText;
+            	  
+            	  var rs = JSON.parse(s);
+            	  if(rs.code!=0)
+            	  {
+            	  	alert(rs.msg);
+            	  }
+            	  else
+            	  {
+            	　  jsonResponse["bizContent解码"]=JSON.parse(rs.data);
+            	  }
+
+                /*  var encrypt = new JSEncrypt();
             	 　 encrypt.setPrivateKey(default_['RSA_PrivateKey_2']);
             	  var content=encrypt.decrypt(jsonResponse.bizContent);
-            	　 jsonResponse.bizContent_decode=content
+            	  */
+            	  
               }
               jsonResponse = JSON.stringify(jsonResponse, null, 4);
           } catch (e) {

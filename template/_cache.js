@@ -9,6 +9,11 @@
   initDofillBox();
   initSampleUrlBox();
   
+  //菜单初始时也定位
+  var sub=$('.nav-list-item[href="'+location.hash+'"]');
+  var nav=$('.sidenav.nav.nav-list.list')
+  nav.scrollTop(nav.scrollTop() + sub.offset().top - nav.offset().top);
+  
 }
 
 function initSampleUrlBox()
