@@ -10,10 +10,16 @@
   initSampleUrlBox();
   
   //菜单初始时也定位
-  var sub=$('.nav-list-item[href="'+location.hash+'"]');
-  var nav=$('.sidenav.nav.nav-list.list')
-  nav.scrollTop(nav.scrollTop() + sub.offset().top - nav.offset().top);
+  hashGroup(location.hash)
   
+}
+function hashGroup(hash)
+{
+
+	  var sub=$('.nav-list-item[href="'+hash+'"]');
+	  if(sub.size()==0) sub=$('.nav-list-item.nav-header [href="'+hash+'"]');
+	  var nav=$('.sidenav.nav.nav-list.list')
+	  nav.scrollTop(nav.scrollTop() + sub.offset().top - nav.offset().top);
 }
 
 function initSampleUrlBox()

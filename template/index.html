@@ -37,6 +37,22 @@
   {{/each}}
   </ul>
 </nav>
+
+  <ul class="group-menu" style="margin:0px;border:gray solid 1px;list-style:none;background:white;position:fixed;z-index:10000;top:50px;right:0px;;display:none;">
+  {{#each nav}}
+    {{#if title}}
+      {{#if isHeader}}
+        {{#if isFixed}}
+          <li onclick="hashGroup('#api-{{group}}')"><a href="#api-{{group}}">{{underscoreToSpace title}}</a></li>
+        {{else}}
+          <li onclick="hashGroup('#api-{{group}}')"><a href="#api-{{group}}">{{underscoreToSpace title}}</a></li>
+        {{/if}}
+        </li>
+      {{/if}}
+    {{/if}}
+  {{/each}}
+  </ul>
+
 </script>
 
 <script id="template-project" type="text/x-handlebars-template">
@@ -694,6 +710,9 @@
 <script src="_define.js"></script><!--add by lizhou-->
 
 <div id="myBox" style="display:none" >
+  <button onclick="$('.group-menu').toggle()" style="width:50px;" title="组名列表">
+    group
+  </button><br/><br/>
   <div class="box box-do_fill" title="请求参数按名称同步">
 	  <input type="checkbox" value="1" id="do_fill" name="do_fill" />
 	  <label for="do_fill"><span/></label>
