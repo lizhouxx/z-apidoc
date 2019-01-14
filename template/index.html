@@ -677,7 +677,6 @@
     <div id="sidenav" class="span2"></div>
     <div id="content">
       <div id="project"></div>
-      <a onclick="window.open('_cache.html')" style="cursor:pointer">cache setting</a>
       <div id="header"></div>
       <div id="sections"></div>
       <div id="footer"></div>
@@ -710,9 +709,9 @@
 <script src="_define.js"></script><!--add by lizhou-->
 
 <div id="myBox" style="display:none" >
-  <button onclick="$('.group-menu').toggle()" style="width:50px;" title="组名列表">
-    group
-  </button><br/><br/>
+  <a onclick="window.open('_cache.html')" style="cursor:pointer">cache</a>
+  <a onclick="$('.group-menu').toggle()" style="cursor:pointer" title="组名列表">group</a>
+  <br/><br/>
   <div class="box box-do_fill" title="请求参数按名称同步">
 	  <input type="checkbox" value="1" id="do_fill" name="do_fill" />
 	  <label for="do_fill"><span/></label>
@@ -720,6 +719,10 @@
   </div>
 </div>
 <style>
+#myBox a,.group-menu a
+{
+text-decoration : none
+}
 .box input
 {
  	 display:none;
