@@ -1,4 +1,23 @@
-﻿function initDefine()
+﻿function sort(arr) {
+    var len = arr.length;
+    var minIndex, temp;
+    for(var i=0; i<len; i++) {
+        //先给一个索引号，假设i为最小的数
+        minIndex = i;
+        //循环遍历，如果i之后有比索引i更小的数，则将索引变为j
+        for(var j=i; j<len; j++) {
+            if(arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+        //将i索引的数和j索引的数互换
+        temp = arr[i];
+        arr[i] = arr[minIndex];
+        arr[minIndex] = temp;
+    }
+    return arr;
+}
+function initDefine()
 {
   //内容：去掉一些无用的元素
 	$('#api-common .language-html').remove();

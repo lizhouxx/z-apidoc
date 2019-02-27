@@ -139,6 +139,47 @@ define([
         	ajaxRequest.data=param.JSON__STR
         }
       }
+      else if(type.toUpperCase()=="SIGN")
+      {
+          $.extend(ajaxRequest.headers,{headers:{"Access-Control-Allow-Origin": "*"}});
+     	 var default_=localStorage.apidoc_default?JSON.parse(localStorage.apidoc_default):{};
+         var secret = default_['SIGN_secret']
+         var arr=new Array()
+         var i=0;
+         param['secret']=secret;
+         if(!param['timestamp'] || param['timestamp']=='')
+         {
+        	 param['timestamp'] = new Date().getTime();
+         }
+         for(x in param)
+         {
+        	 arr[i++]=x;
+         }
+         sort(arr)
+         var s=''
+         for(a in arr)
+         {
+        	 var x=arr[a]
+        	 if(x=='sign')
+             {
+        		 continue;
+             }
+        	 if(param[x]!='')
+             {
+        		 s+=param[x];
+             }
+         }
+         var sign=s.MD5(32).toUpperCase()
+         param['secret']='';
+
+         if(!param['sign'] || param['sign']=='')
+         {
+        	 param['sign']=sign;
+         }
+         console.log(s+" : "+sign)
+         ajaxRequest.data=param
+         ajaxRequest.type='POST';
+      }
       else if(type.toUpperCase()=="RSA")
       {
     	 var default_=localStorage.apidoc_default?JSON.parse(localStorage.apidoc_default):{};

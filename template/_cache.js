@@ -177,7 +177,7 @@ function inputCacheJson(val)
     {
     	localStorage['apidoc_'+urlFag]=localStorage.apidoc_history;
     }
-    console.log(localStorage['apidoc_'+urlFag])
+    //console.log(localStorage['apidoc_'+urlFag])
     var j = localStorage['apidoc_'+urlFag]?localStorage['apidoc_'+urlFag]:'{}'
 	  return JSON.parse(j)
 
