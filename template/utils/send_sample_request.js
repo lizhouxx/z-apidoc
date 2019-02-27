@@ -164,9 +164,9 @@ define([
              {
         		 continue;
              }
-        	 if(param[x]!='')
+        	 if(param[x] && param[x]!='')
              {
-        		 s+=param[x];
+        		 s+=encodeURIComponent(param[x]);
              }
          }
          var sign=s.MD5(32).toUpperCase()
