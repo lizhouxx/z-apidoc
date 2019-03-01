@@ -169,6 +169,7 @@ define([
         		 s+=encodeURIComponent(param[x]);
              }
          }
+         s=s.replace(new RegExp('(%20)',"gm"),"+")
          var sign=s.MD5(32).toUpperCase()
          param['secret']='';
 
