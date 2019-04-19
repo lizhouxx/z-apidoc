@@ -225,9 +225,15 @@ console.log("data:"+JSON.stringify(ajaxRequest.data))
             	  
             	  var p = {bizContent:jsonResponse.bizContent, privateKey:default_['RSA_PrivateKey_2']}
             	              	  
-            	  s=$.ajax({url:"http://localhost:8850/decode",data:p,async:false}).responseText;
-            	  
-            	  var rs = JSON.parse(s);
+            	  //s=$.ajax({url:"http://localhost:8850/decode",data:p,async:false}).responseText;
+            	  //var rs = JSON.parse(s);
+            	    
+            	  $.ajaxSettings.async = false;
+            	    $.post("http://localhost:8850/decode", p, function(result) {
+            			rs=result;
+            	    },"json");
+            	    $.ajaxSettings.async = true;
+            	    
             	  if(rs.code!=0)
             	  {
             	  	alert(rs.msg);
