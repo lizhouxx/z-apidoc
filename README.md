@@ -34,8 +34,8 @@
   "version": "1.0.0",
   "description": "yyb_parks interface",
   "title": "yyb_parks interface",
-  "url" : "http://116.62.190.147:8888",
-  "sampleUrl" : "http://116.62.190.147:8888",
+  "url" : "http://abc:8888",
+  "sampleUrl" : "http://abc:8888",
   "order":[ 
       "auth",
       "member",
