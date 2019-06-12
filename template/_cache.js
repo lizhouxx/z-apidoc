@@ -112,7 +112,7 @@ function initDofillBox()
 //p：选择单个接口（article元素）
 function cacheInput(p) {
     var info={};
-    $(p+" [data-sample-request-param-name],[data-sample-request-header-name]").each(function()
+    $(p+" [data-sample-request-param-name],"+p+" [data-sample-request-header-name]").each(function()
     {
     	  if(this.id && this.id!='' && this.value!='')
     	  {
